@@ -1,0 +1,19 @@
+server:
+  port: 8282
+
+spring:
+  application:
+    name: @artifactId@
+
+qq-guild:
+  base-url: https://api.sgroup.qq.com
+  shard: 0, 1
+  intents: 0, 1, 9
+  bot-app-id: QQ机器人开放平台的botAppId
+  bot-token: QQ机器人开放平台的botToken
+
+moli:
+  base-url: https://i.mly.app
+  file-url: https://files.molicloud.com/
+  api-key: 茉莉云的机器人Api-Key
+  api-secret: 茉莉云的机器人Api-Secret
