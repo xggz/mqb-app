@@ -21,25 +21,42 @@ public class ArkMessage extends MessageBase {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 模板ID
+     * Ark消息体
      */
-    private Integer template_id;
-
-    /**
-     * 键值对
-     */
-    private List<Field> kv;
+    private Ark ark;
 
     @Builder
-    public ArkMessage(Integer template_id, List<Field> kv) {
-        this.template_id = template_id;
-        this.kv = kv;
+    public ArkMessage(String msg_id, Ark ark) {
+        super.setMsg_id(msg_id);
+        this.ark = ark;
     }
 
     public static FieldObject buildFieldObject(String content) {
         List<ArkMessage.FieldString> fieldStringList = CollUtil.newArrayList(new ArkMessage.FieldString("desc", content));
         ArkMessage.FieldObject fieldObject = new ArkMessage.FieldObject(fieldStringList);
         return fieldObject;
+    }
+
+    @Data
+    public static class Ark implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 模板ID
+         */
+        private Integer template_id;
+
+        /**
+         * 键值对
+         */
+        private List<Field> kv;
+
+        @Builder
+        public Ark(Integer template_id, List<Field> kv) {
+            this.template_id = template_id;
+            this.kv = kv;
+        }
     }
 
     @Data

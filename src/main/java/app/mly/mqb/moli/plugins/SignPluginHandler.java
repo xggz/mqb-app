@@ -27,25 +27,29 @@ public class SignPluginHandler implements PluginHandler {
     @Override
     public void reply(Message message, JSONObject replyObj) {
         if ("签到".equals(replyObj.getStr("trigger"))) {
-            EmbedMessage embedMessage = EmbedMessage.builder()
+            EmbedMessage.Embed embed = EmbedMessage.Embed.builder()
                     .prompt("签到提醒")
                     .thumbnail(new EmbedMessage.Thumbnail(message.getAuthor().getAvatar()))
                     .build();
             if (replyObj.getBool("success")) {
-                embedMessage.setTitle("签到成功");
-                embedMessage.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick() + " 你今天第" + replyObj.getInt("top") + "个签到，明天继续呦！",
+                embed.setTitle("签到成功");
+                embed.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick() + " 你今天第" + replyObj.getInt("top") + "个签到，明天继续呦！",
                         "🍀 获取经验：" + replyObj.getInt("exp"),
                         "💰 获取金币：" + replyObj.getInt("point"),
                         "💧 连续签到：" + replyObj.getInt("seriesDays") + "天",
                         "💦 累计签到：" + replyObj.getInt("totalDays") + "天"
                 ));
             } else {
-                embedMessage.setTitle("签到失败");
-                embedMessage.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick(), "今天已经签到过啦，明天再来吧！"));
+                embed.setTitle("签到失败");
+                embed.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick(), "今天已经签到过啦，明天再来吧！"));
             }
-            guildOpenApi.sendMessage(message.getChannel_id(), embedMessage);
+            guildOpenApi.sendMessage(message.getChannel_id(),
+                    EmbedMessage.builder()
+                            .msg_id(message.getId())
+                            .embed(embed)
+                            .build());
         } else if ("签到榜".equals(replyObj.getStr("trigger"))) {
-            ArkMessage arkMessage = ArkMessage.builder()
+            ArkMessage.Ark ark = ArkMessage.Ark.builder()
                     .template_id(23)
                     .build();
 
@@ -65,9 +69,13 @@ public class SignPluginHandler implements PluginHandler {
             ArkMessage.FieldList fieldList = new ArkMessage.FieldList("#LIST#", fieldObjectList);
             fieldArray.add(fieldList);
 
-            arkMessage.setKv(fieldArray);
+            ark.setKv(fieldArray);
 
-            guildOpenApi.sendMessage(message.getChannel_id(), arkMessage);
+            guildOpenApi.sendMessage(message.getChannel_id(),
+                    ArkMessage.builder()
+                            .msg_id(message.getId())
+                            .ark(ark)
+                            .build());
         }
     }
 }

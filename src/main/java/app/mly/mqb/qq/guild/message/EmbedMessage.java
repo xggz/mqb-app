@@ -20,35 +20,52 @@ public class EmbedMessage extends MessageBase {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 标题
+     * Embed消息体
      */
-    private String title;
-
-    /**
-     * 消息弹窗内容
-     */
-    private String prompt;
-
-    /**
-     * 缩略图
-     */
-    private Thumbnail thumbnail;
-
-    /**
-     * Embed字段数据
-     */
-    private List<Field> fields;
+    private Embed embed;
 
     @Builder
-    public EmbedMessage(String title, String prompt, Thumbnail thumbnail, List<Field> fields) {
-        this.title = title;
-        this.prompt = prompt;
-        this.thumbnail = thumbnail;
-        this.fields = fields;
+    public EmbedMessage(String msg_id, Embed embed) {
+        super.setMsg_id(msg_id);
+        this.embed = embed;
     }
 
     public static List<Field> buildFields(String ... names) {
         return Arrays.stream(names).map(f -> new Field(f)).collect(Collectors.toList());
+    }
+
+    @Data
+    public static class Embed implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 标题
+         */
+        private String title;
+
+        /**
+         * 消息弹窗内容
+         */
+        private String prompt;
+
+        /**
+         * 缩略图
+         */
+        private Thumbnail thumbnail;
+
+        /**
+         * Embed字段数据
+         */
+        private List<Field> fields;
+
+        @Builder
+        public Embed(String title, String prompt, Thumbnail thumbnail, List<Field> fields) {
+            this.title = title;
+            this.prompt = prompt;
+            this.thumbnail = thumbnail;
+            this.fields = fields;
+        }
     }
 
     @Data

@@ -27,7 +27,7 @@ public class GuildRestTemplate {
     private GuildProperties guildProperties;
 
     public String exchange(String uri, HttpMethod httpMethod, MultiValueMap<String, Object> params) {
-        log.info("url:" + guildProperties.getBaseUrl() + uri);
+        log.info("guild url:" + guildProperties.getBaseUrl() + uri);
         ResponseEntity<String> responseEntity = restTemplate.exchange(guildProperties.getBaseUrl() + uri,
                 httpMethod,
                 httpEntity(params),
@@ -44,9 +44,9 @@ public class GuildRestTemplate {
     }
 
     public String postForBodyJson(String uri, String bodyJson) {
-        log.info("url:" + guildProperties.getBaseUrl() + uri);
+        log.info("guild url:" + guildProperties.getBaseUrl() + uri);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(guildProperties.getBaseUrl() + uri,
-                jsonHttpEntity(bodyJson),
+                bodyHttpEntity(bodyJson),
                 String.class);
         if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
             return responseEntity.getBody();
@@ -62,11 +62,11 @@ public class GuildRestTemplate {
         return headers;
     }
 
-    private HttpEntity httpEntity(MultiValueMap<String,Object> params) {
+    private HttpEntity httpEntity(MultiValueMap<String, Object> params) {
         return new HttpEntity(params, httpHeaders());
     }
 
-    private HttpEntity jsonHttpEntity(String bodyJson) {
-        return new HttpEntity(bodyJson, httpHeaders());
+    private <T> HttpEntity<T> bodyHttpEntity(T body) {
+        return new HttpEntity<T>(body, httpHeaders());
     }
 }

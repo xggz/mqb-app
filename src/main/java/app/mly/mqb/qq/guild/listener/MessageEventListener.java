@@ -81,9 +81,9 @@ public class MessageEventListener {
                 JSONObject data = (JSONObject) dataArray.get(i);
                 Integer typed = data.getInt("typed");
                 if (typed == 1) {
-                    guildOpenApi.sendMessage(message.getChannel_id(), NormalMessage.buildTextMessage(data.getStr("content")));
+                    guildOpenApi.sendMessage(message.getChannel_id(), NormalMessage.buildTextMessage(message.getId(), data.getStr("content")));
                 } else if (typed == 2) {
-                    guildOpenApi.sendMessage(message.getChannel_id(), NormalMessage.buildImageMessage(moliProperties.getFileUrl() + data.getStr("content")));
+                    guildOpenApi.sendMessage(message.getChannel_id(), NormalMessage.buildImageMessage(message.getId(), moliProperties.getFileUrl() + data.getStr("content")));
                 } else if (typed == 8) {
                     String msg = data.getStr("content");
                     JSONObject replyObj = new JSONObject(msg);

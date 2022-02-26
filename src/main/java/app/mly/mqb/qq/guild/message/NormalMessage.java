@@ -25,16 +25,23 @@ public class NormalMessage extends MessageBase {
     private String image;
 
     @Builder
-    public NormalMessage(String content, String image) {
+    public NormalMessage(String msg_id, String content, String image) {
+        super.setMsg_id(msg_id);
         this.content = content;
         this.image = image;
     }
 
-    public static NormalMessage buildTextMessage(String content) {
-        return NormalMessage.builder().content(content).build();
+    public static NormalMessage buildTextMessage(String msg_id, String content) {
+        return NormalMessage.builder()
+                .msg_id(msg_id)
+                .content(content)
+                .build();
     }
 
-    public static NormalMessage buildImageMessage(String image) {
-        return NormalMessage.builder().image(image).build();
+    public static NormalMessage buildImageMessage(String msg_id, String image) {
+        return NormalMessage.builder()
+                .msg_id(msg_id)
+                .image(image)
+                .build();
     }
 }

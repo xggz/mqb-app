@@ -27,7 +27,7 @@ public class UCenterPluginHandler implements PluginHandler {
     @Override
     public void reply(Message message, JSONObject replyObj) {
         if ("个人中心".equals(replyObj.getStr("trigger"))) {
-            EmbedMessage embedMessage = EmbedMessage.builder()
+            EmbedMessage.Embed embed = EmbedMessage.Embed.builder()
                     .prompt("个人中心")
                     .title("个人中心")
                     .thumbnail(new EmbedMessage.Thumbnail(message.getAuthor().getAvatar()))
@@ -37,9 +37,13 @@ public class UCenterPluginHandler implements PluginHandler {
                             "🍀 经验：" + replyObj.getInt("exp"),
                             "💰 金币：" + replyObj.getInt("point")))
                     .build();
-            guildOpenApi.sendMessage(message.getChannel_id(), embedMessage);
+            guildOpenApi.sendMessage(message.getChannel_id(),
+                    EmbedMessage.builder()
+                            .msg_id(message.getId())
+                            .embed(embed)
+                            .build());
         } else if ("财富榜".equals(replyObj.getStr("trigger"))) {
-            ArkMessage arkMessage = ArkMessage.builder()
+            ArkMessage.Ark ark = ArkMessage.Ark.builder()
                     .template_id(23)
                     .build();
 
@@ -59,11 +63,15 @@ public class UCenterPluginHandler implements PluginHandler {
             ArkMessage.FieldList fieldList = new ArkMessage.FieldList("#LIST#", fieldObjectList);
             fieldArray.add(fieldList);
 
-            arkMessage.setKv(fieldArray);
+            ark.setKv(fieldArray);
 
-            guildOpenApi.sendMessage(message.getChannel_id(), arkMessage);
+            guildOpenApi.sendMessage(message.getChannel_id(),
+                    ArkMessage.builder()
+                            .msg_id(message.getId())
+                            .ark(ark)
+                            .build());
         } else if ("等级榜".equals(replyObj.getStr("trigger"))) {
-            ArkMessage arkMessage = ArkMessage.builder()
+            ArkMessage.Ark ark = ArkMessage.Ark.builder()
                     .template_id(23)
                     .build();
 
@@ -83,9 +91,13 @@ public class UCenterPluginHandler implements PluginHandler {
             ArkMessage.FieldList fieldList = new ArkMessage.FieldList("#LIST#", fieldObjectList);
             fieldArray.add(fieldList);
 
-            arkMessage.setKv(fieldArray);
+            ark.setKv(fieldArray);
 
-            guildOpenApi.sendMessage(message.getChannel_id(), arkMessage);
+            guildOpenApi.sendMessage(message.getChannel_id(),
+                    ArkMessage.builder()
+                            .msg_id(message.getId())
+                            .ark(ark)
+                            .build());
         }
     }
 }

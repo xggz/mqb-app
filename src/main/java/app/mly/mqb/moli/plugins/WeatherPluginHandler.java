@@ -26,7 +26,7 @@ public class WeatherPluginHandler implements PluginHandler {
 
     @Override
     public void reply(Message message, JSONObject replyObj) {
-        EmbedMessage embedMessage = EmbedMessage.builder()
+        EmbedMessage.Embed embed = EmbedMessage.Embed.builder()
                 .prompt("天气预报")
                 .title(replyObj.getStr("place") + "天气")
                 .build();
@@ -45,27 +45,31 @@ public class WeatherPluginHandler implements PluginHandler {
                     fieldList.add(new EmbedMessage.Field(" "));
                     fieldList.add(new EmbedMessage.Field(replyObj.getInt("changeHours") + "小时后" + nowInfoObj.getStr("weather") + "转" + changeInfo.getStr("weather")));
                 }
-                embedMessage.setThumbnail(new EmbedMessage.Thumbnail("https://files.molicloud.com/weather/icon/" + type + "/" + nowInfoObj.getStr("weatherCode") + ".png"));
+                embed.setThumbnail(new EmbedMessage.Thumbnail("https://files.molicloud.com/weather/icon/" + type + "/" + nowInfoObj.getStr("weatherCode") + ".png"));
             } else {
                 JSONObject dayInfoObj = replyObj.getJSONObject("dayInfo");
                 JSONObject nightInfoObj = replyObj.getJSONObject("nightInfo");
 
                 fieldList.add(new EmbedMessage.Field("☀ " + dayInfoObj.getStr("weather") + "  " + dayInfoObj.getStr("temperature") + "℃  " + dayInfoObj.getStr("windDirection")));
                 fieldList.add(new EmbedMessage.Field("🌒 " + nightInfoObj.getStr("weather") + "  " + nightInfoObj.getStr("temperature") + "℃  " + nightInfoObj.getStr("windDirection")));
-                embedMessage.setThumbnail(new EmbedMessage.Thumbnail("https://files.molicloud.com/weather/icon/day/" + dayInfoObj.getStr("weatherCode") + ".png"));
+                embed.setThumbnail(new EmbedMessage.Thumbnail("https://files.molicloud.com/weather/icon/day/" + dayInfoObj.getStr("weatherCode") + ".png"));
             }
 
-            embedMessage.setFields(fieldList);
+            embed.setFields(fieldList);
         } else if (State.C.getValue().equals(replyObj.getInt("state"))) {
-            embedMessage.setThumbnail(new EmbedMessage.Thumbnail(message.getAuthor().getAvatar()));
-            embedMessage.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick(),
+            embed.setThumbnail(new EmbedMessage.Thumbnail(message.getAuthor().getAvatar()));
+            embed.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick(),
                     "你要查询哪个城市的天气呢！"));
         } else if (State.N.getValue().equals(replyObj.getInt("state"))) {
-            embedMessage.setThumbnail(new EmbedMessage.Thumbnail(message.getAuthor().getAvatar()));
-            embedMessage.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick(),
+            embed.setThumbnail(new EmbedMessage.Thumbnail(message.getAuthor().getAvatar()));
+            embed.setFields(EmbedMessage.buildFields("@" + message.getMember().getNick(),
                     "抱歉，不支持查询此地点！"));
         }
 
-        guildOpenApi.sendMessage(message.getChannel_id(), embedMessage);
+        guildOpenApi.sendMessage(message.getChannel_id(),
+                EmbedMessage.builder()
+                        .msg_id(message.getId())
+                        .embed(embed)
+                        .build());
     }
 }
