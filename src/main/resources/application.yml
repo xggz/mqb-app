@@ -8,7 +8,7 @@ spring:
 qq-guild:
   base-url: https://api.sgroup.qq.com
   shard: 0, 1
-  intents: 0, 1, 9
+  intents: 0, 1, 30
   bot-app-id: QQ机器人开放平台的botAppId
   bot-token: QQ机器人开放平台的botToken
 

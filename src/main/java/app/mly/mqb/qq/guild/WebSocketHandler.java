@@ -121,7 +121,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 handlerHeartbeatInterval();
             }
             this.bot.setIsStop(false);
-        } else if (event.equals("MESSAGE_CREATE")) {
+        } else if (event.equals("AT_MESSAGE_CREATE")) {
             MessageEvent messageEvent = new MessageEvent();
             messageEvent.setBot(this.bot);
             messageEvent.setGuildName(guildsMap.get(""));
