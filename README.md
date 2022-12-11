@@ -17,7 +17,7 @@
 https://bot.q.qq.com
 
 ### 茉莉云Api
-https://mly.app
+https://mlyai.com
 
 ### 效果截图
 ![demo1](image/1.jpg)

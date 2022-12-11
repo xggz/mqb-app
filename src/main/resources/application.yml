@@ -13,7 +13,7 @@ qq-guild:
   bot-token: QQ机器人开放平台的botToken
 
 moli:
-  base-url: https://i.mly.app
+  base-url: https://api.mlyai.com
   file-url: https://files.molicloud.com/
   api-key: 茉莉云的机器人Api-Key
   api-secret: 茉莉云的机器人Api-Secret
