@@ -163,7 +163,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 try {
                     Thread.sleep(this.bot.getHeartbeatInterval());
                     if (!this.bot.getIsStop()) {
-                        this.session.sendMessage(new TextMessage(jsonObject.toString()));
+                        synchronized (this.session) {
+                            this.session.sendMessage(new TextMessage(jsonObject.toString()));
+                        }
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
@@ -190,7 +192,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 .d(authData)
                 .build();
 
-        this.session.sendMessage(new TextMessage(payload.toJsonString()));
+        synchronized (this.session) {
+            this.session.sendMessage(new TextMessage(payload.toJsonString()));
+        }
     }
 
     /**

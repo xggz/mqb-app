@@ -1,6 +1,8 @@
 package app.mly.mqb.qq.guild;
 
 import app.mly.mqb.qq.guild.request.GuildOpenApi;
+import cn.hutool.core.util.StrUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +46,21 @@ public class WebSocketStarter implements SmartInitializingSingleton {
     /**
      * 初始化连接
      */
+    @SneakyThrows
     private void initSocketConnection() {
-        String socketUrl = guildRestApi.getSocketUrl();
-        log.info("socket url:" + socketUrl);
+        String socketUrl = null;
+        
+        do {
+            try {
+                socketUrl = guildRestApi.getSocketUrl();
+                log.info("socket url:" + socketUrl);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            
+            // SocketUrl获取失败后，间隔3秒后再次尝试获取
+            Thread.sleep(3000L);
+        } while (StrUtil.isBlank(socketUrl));
 
         StandardWebSocketClient socketClient = new StandardWebSocketClient();
         webSocketConnectionManager = new WebSocketConnectionManager(socketClient, webSocketHandler, socketUrl);
