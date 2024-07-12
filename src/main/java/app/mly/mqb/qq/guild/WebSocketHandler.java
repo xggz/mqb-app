@@ -4,6 +4,7 @@ import app.mly.mqb.qq.guild.common.*;
 import app.mly.mqb.qq.guild.enums.ActionType;
 import app.mly.mqb.qq.guild.enums.Opcode;
 import app.mly.mqb.qq.guild.event.ActionEvent;
+import app.mly.mqb.qq.guild.event.GroupMessageEvent;
 import app.mly.mqb.qq.guild.event.MessageEvent;
 import app.mly.mqb.qq.guild.properties.GuildProperties;
 import app.mly.mqb.qq.guild.request.GuildOpenApi;
@@ -129,6 +130,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
             eventPublisher.publishEvent(messageEvent);
         } else if (event.equals("GUILD_CREATE")) {
             guildsMap.put(payload.getD().getStr("id"), payload.getD().getStr("name"));
+        } else if (event.equals("GROUP_AT_MESSAGE_CREATE")) {
+            GroupMessageEvent groupMessageEvent = new GroupMessageEvent();
+            groupMessageEvent.setBot(this.bot);
+            groupMessageEvent.setGroupMessage(payload.getD().toBean(GroupMessage.class));
+            eventPublisher.publishEvent(groupMessageEvent);
         }
     }
 

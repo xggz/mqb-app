@@ -4,7 +4,9 @@ import app.mly.mqb.moli.MoliOpenApi;
 import app.mly.mqb.moli.common.MoliMsg;
 import app.mly.mqb.moli.plugins.PluginReplyExecutor;
 import app.mly.mqb.moli.properties.MoliProperties;
+import app.mly.mqb.qq.guild.common.GroupMessage;
 import app.mly.mqb.qq.guild.common.Message;
+import app.mly.mqb.qq.guild.event.GroupMessageEvent;
 import app.mly.mqb.qq.guild.event.MessageEvent;
 import app.mly.mqb.qq.guild.message.NormalMessage;
 import app.mly.mqb.qq.guild.request.GuildOpenApi;
@@ -71,6 +73,20 @@ public class MessageEventListener {
         handlerMessage(messageEvent.getMessage(), mollyMsg);
     }
 
+    @Async
+    @EventListener(GroupMessageEvent.class)
+    public void handlerResult(GroupMessageEvent groupMessageEvent) {
+        GroupMessage groupMessage = groupMessageEvent.getGroupMessage();
+        MoliMsg mollyMsg = MoliMsg.builder()
+                .from(groupMessage.getAuthor().getId())
+                .fromName(groupMessage.getAuthor().getMember_openid())
+                .to(groupMessage.getGroup_id())
+                .toName(groupMessage.getGroup_openid())
+                .content(groupMessage.getContent())
+                .build();
+        handlerGroupMessage(groupMessage, mollyMsg);
+    }
+
     @SneakyThrows
     private void handlerMessage(Message message, MoliMsg mollyMsg) {
         JSONObject mollyReply = moliOpenApi.moliReply(mollyMsg);
@@ -88,6 +104,23 @@ public class MessageEventListener {
                     String msg = data.getStr("content");
                     JSONObject replyObj = new JSONObject(msg);
                     pluginReplyExecutor.execute(plugin, message, replyObj);
+                }
+            }
+        }
+    }
+
+    @SneakyThrows
+    private void handlerGroupMessage(GroupMessage groupMessage, MoliMsg mollyMsg) {
+        JSONObject mollyReply = moliOpenApi.moliReply(mollyMsg);
+        if ("00000".equals(mollyReply.getStr("code"))) {
+            JSONArray dataArray = mollyReply.getJSONArray("data");
+            for (int i = 0; i < dataArray.size(); i++) {
+                JSONObject data = (JSONObject) dataArray.get(i);
+                Integer typed = data.getInt("typed");
+                if (typed == 1) {
+                    guildOpenApi.sendGroupMessage(groupMessage.getGroup_openid(), NormalMessage.buildTextMessage(groupMessage.getId(), data.getStr("content")));
+                } else if (typed == 2) {
+                    guildOpenApi.sendGroupMessage(groupMessage.getGroup_openid(), NormalMessage.buildImageMessage(groupMessage.getId(), moliProperties.getFileUrl() + data.getStr("content")));
                 }
             }
         }

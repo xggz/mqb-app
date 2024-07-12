@@ -49,6 +49,16 @@ public class GuildOpenApi {
     }
 
     /**
+     * 发送消息
+     *
+     * @param groupOpenId
+     * @param messageBase
+     */
+    public void sendGroupMessage(String groupOpenId, MessageBase messageBase) {
+        guildRestTemplate.postForBodyJson("/v2/groups/" + groupOpenId + "/messages", messageBase.toJsonString());
+    }
+
+    /**
      * 获取频道列表
      *
      * @return
